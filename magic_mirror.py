@@ -11,11 +11,12 @@ from flask import Flask, render_template
 api_key = ""
 
 # Latitude and Longitude for desired location
-lat = ""
-lng = ""
+lat = None
+lng = None
 
 WEATHER = forecastio.load_forecast(api_key, lat, lng,)
 HOURLY_WEATHER = WEATHER.hourly()
+DAILY_WEATHER = WEATHER.daily()
 
 
 def date_time():
@@ -41,14 +42,6 @@ def current_weather_temp():
         return temperature
 
 
-def current_weather_summary():
-    """ Get the current weather summary. """
-
-    for data in HOURLY_WEATHER.data[:1]:
-        summary = data.summary
-        return summary
-
-
 def current_weather_icon():
     """ Get the current weather icon. """
 
@@ -63,6 +56,30 @@ def current_time():
     current_time.now = time.time()
     return current_time.now
 
+
+def daily_weather_summary():
+    """ Get the current weather summary. """
+
+    for data in DAILY_WEATHER.data[:1]:
+        summary = data.summary
+        return summary
+
+
+def daily_weather_temperature_high():
+    """ Get the high temperature for the day """
+
+    for data in DAILY_WEATHER.data[:1]:
+        high_temp = int(round(data.temperatureMax))
+        return high_temp
+
+
+def daily_weather_temperature_low():
+    """ Get the low temperature for the day """
+
+    for data in DAILY_WEATHER.data[:1]:
+        low_temp = int(round(data.temperatureMin))
+        return low_temp
+
 APP = Flask(__name__)
 
 
@@ -70,7 +87,7 @@ APP = Flask(__name__)
 def index():
     """ Create the HTML Page """
 
-    return render_template('index.html', date=date_time(), temp=current_weather_temp(), conditions=current_weather_summary(), wi=current_weather_icon())
+    return render_template('index.html', date=date_time(), high=daily_weather_temperature_high(), low=daily_weather_temperature_low(), temp=current_weather_temp(), conditions=daily_weather_summary(), wi=current_weather_icon())
 
 if __name__ == '__main__':
     APP.run(debug=True)
