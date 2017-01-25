@@ -1,76 +1,121 @@
-<!doctype html>
-<html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
 
-        <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-        <link href="../static/css/weather-icons.css" rel="stylesheet" type="text/css">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="300">
 
-        <style>
-            body {
-                padding-top: 50px;
-                padding-bottom: 20px;
+    <title>Magic Mirror</title>
+    <meta name="author" content="Drew Russell">
+
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link href="../static/css/weather-icons.css" rel="stylesheet" type="text/css">
+
+
+    <script type="text/javascript">
+        function GetClock() {
+            var d = new Date();
+            var nhour = d.getHours(),
+                nmin = d.getMinutes(),
+                ap;
+            if (nhour == 0) {
+                ap = " AM";
+                nhour = 12;
+            } else if (nhour < 12) {
+                ap = " AM";
+            } else if (nhour == 12) {
+                ap = " PM";
+            } else if (nhour > 12) {
+                ap = " PM";
+                nhour -= 12;
             }
-        </style>
-        <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="../static/css/main.css">
+
+            if (nmin <= 9) nmin = "0" + nmin;
+
+            document.getElementById('clock').innerHTML = "" + nhour + ":" + nmin + ap + "";
+            document.getElementById("clock").className = "clock";
+
+        }
+
+        window.onload = function() {
+            GetClock();
+            setInterval(GetClock, 1000);
+        }
+    </script>
 
 
-        <script src="../static/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-    </head>
+</head>
 
-    <body>
+<body>
 
-      <div class="container">
-
-
-        <div class="row">
-          <div class="col-md-6">
-            <h3>{{date}}</h3>
-          </div>
-
-
-          <div class="col-md-6">
-            <div>
-              <div class="row">
-                <div class="col-md-6">
-                  <i class="wi wi-fw {{wi}} "></i>
-                </div>
-                  <div class="col-md-6">
-                    <h1 align=right>{{temp}} &#8457</h1>
-
-                    <br>
-                  </div>
-                </div>
-
-                <h4 align=right>St. Louis, MO</h4>
-                <br>
-                <h4 align=right>{{high}} &#8457 / {{low}} &#8457 </h4>
-                <br>
-                <h4 align="right">{{conditions}}</h4>
-
-              </div>
+    <h1 align=center>{{date}}</h1>
+    <h2 align=center>{{traffic}} minutes to WWT</h2>
+    <br>
+    <br>
+    <br>
+    <div id="clock"></div>
 
 
 
+    <!-- Today and Tomorrows Weather -->
+    <div id="weather">
+        <!-- Today -->
 
-              </div>
+        <div class="left_border">
+
+            <h2>Current</h2>
+
+            <!-- Weather Icon -->
+            <div class="left">
+                <h2>{{temp}}&deg;</h2>
+            </div>
+
+            <!-- High Temp -->
+            <div class="right">
+                <i style="font-size: 110px;" class="wi {{wi}} "></i>
+            </div>
 
 
-          </div>
         </div>
 
+        <!-- Tommorrow -->
+        <div class="right">
+
+            <h2>Tomorrow</h2>
+
+            <!-- Weather Icon -->
+            <div class="left">
+                {% for forecast in weekly %}
+                <h2 style="text-align: left">{{forecast[1]}}&deg; | {{forecast[2]}}&deg;</h2> {% endfor %}
+
+            </div>
 
 
+            <!-- High Temp -->
+            <div class="right">
+                {% for forecast in weekly %}
+                <i style="font-size: 110px;" class="wi {{forecast[3]}} "></i> {% endfor %}
+
+            </div>
 
 
-      </div> <!-- /container -->
+        </div>
+
+    </div>
+
+    <div id="sonarr">
+
+        {% if 'error' in tv %}
+        <h2 style="color:white;">Unable to Connect to Sonarr</h2> {% elif tv|length == 0 %}
+        <h2 style="color:white;">No New TV Episodes Today</h2> {% else %}
+        <ul style="color:white;">
+            {% for show in tv %}
+            <h2 style="color:white;">{{show}}<h2>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
 
+</div>
 
-    </body>
-</html>
+
+</body>

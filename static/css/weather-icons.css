@@ -40,6 +40,10 @@
   text-align: right;
   width: 7em;
 }
+.wi-fw-small {
+  text-align: right;
+  width: 3em;
+}
 .wi-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);
   -webkit-transform: rotate(90deg);
