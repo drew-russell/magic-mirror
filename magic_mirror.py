@@ -18,6 +18,8 @@ lng =
 # Sonarr IP Address & Port x.x.x.x:xxxx
 sonarr_ip =
 
+sonarr_api =
+
 
 def forecast():
     """Connect to the ForecastIO API and load the hourly and daily weather. This
@@ -146,7 +148,7 @@ def sonarr():
     try:
         # Query the Sonarr API for the episodes being downloaded tonight
         show_calendar = requests.get(
-            'http://{}/api/calendar?start={}&end={}&apikey=34f72bc1ea524dc0984549746b7839c7'.format(sonarr_ip, today, tomorrow), timeout=15)
+            'http://{}/api/calendar?start={}&end={}&apikey={}'.format(sonarr_ip, q today, tomorrow, sonarr_api), timeout=15)
 
         # Format the API Data correctly
         new_tonight = show_calendar.json()

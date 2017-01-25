@@ -11,6 +11,7 @@
 ### Sonarr (TV shows)
 
 - sonarr_ip
+- sonarr_api
 
 ### Google Traffic
 
